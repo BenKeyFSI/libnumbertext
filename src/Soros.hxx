@@ -18,12 +18,12 @@
   #include <regex>
 #endif
 
-class NUMBER_TEXT_API Soros {
+class Soros {
 
 public:
-    Soros(std::wstring program, std::wstring filtered_lang);
-    int run(std::wstring& input);
-    static std::wstring translate(std::wstring s,
+    NUMBER_TEXT_API Soros(std::wstring program, std::wstring filtered_lang);
+    NUMBER_TEXT_API int run(std::wstring& input);
+    NUMBER_TEXT_API static std::wstring translate(std::wstring s,
                 std::wstring chars, const std::wstring& chars2, const std::wstring& delim);
 private:
     void run(std::wstring& input, int& level, bool begin = true, bool end = true);

@@ -148,7 +148,7 @@ int main(int argc, char* argv[])
                 long long b = std::stoll(n[1].str());
                 long long end = std::stoll(n[2].str());
                 long long step = (n[3].length() == 0) ? 1 : std::stoll(n[3].str());
-                for (int j = b; j <= end; j = j + step) {
+                for (long long j = b; j <= end; j = j + step) {
                     std::string result = prefix + std::to_string(j);
                     if (!nt.numbertext(result, lang))
                         error();
