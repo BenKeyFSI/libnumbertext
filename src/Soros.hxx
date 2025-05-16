@@ -9,6 +9,7 @@
 #include <iterator>
 #include <string>
 
+#include "NumberTextAPI.hxx"
 #include "numbertext-version.h"
 
 #ifdef NUMBERTEXT_BOOST
@@ -17,7 +18,7 @@
   #include <regex>
 #endif
 
-class Soros {
+class NUMBER_TEXT_API Soros {
 
 public:
     Soros(std::wstring program, std::wstring filtered_lang);
@@ -40,7 +41,12 @@ private:
     std::vector<bool> begins;
     std::vector<bool> ends;
 
-    static const std::wstring m, m2, c, c2, slash, pipe;
+    static const std::wstring m;
+    static const std::wstring m2;
+    static const std::wstring c;
+    static const std::wstring c2;
+    static const std::wstring slash;
+    static const std::wstring pipe;
 };
 
 #endif

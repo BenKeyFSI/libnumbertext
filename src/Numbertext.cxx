@@ -69,6 +69,16 @@ bool Numbertext::load(std::string lang, std::string filename)
     return true;
 }
 
+bool Numbertext::load(std::wstring lang, std::wstring filename)
+{
+    return load(wstring2string(lang), wstring2string(filename));
+}
+
+bool Numbertext::good() const
+{
+    return modules.size() > 0;
+}
+
 bool Numbertext::numbertext(std::wstring& number, const std::string& lang)
 {
     auto module = modules.find(lang);
@@ -80,6 +90,11 @@ bool Numbertext::numbertext(std::wstring& number, const std::string& lang)
     }
     module->second.run(number);
     return true;
+}
+
+bool Numbertext::numbertext(std::wstring& number, const std::wstring& lang)
+{
+    return numbertext(number, wstring2string(lang));
 }
 
 bool Numbertext::numbertext(std::string& number, const std::string& lang)
@@ -95,6 +110,13 @@ std::string Numbertext::numbertext(int number, const std::string& lang)
     std::wstring wnumber = std::to_wstring(number);
     numbertext(wnumber, lang);
     return wstring2string(wnumber);
+}
+
+std::wstring Numbertext::numbertext(int number, const std::wstring& lang)
+{
+    std::wstring wnumber = std::to_wstring(number);
+    numbertext(wnumber, lang);
+    return wnumber;
 }
 
 std::wstring Numbertext::string2wstring(const std::string& s)

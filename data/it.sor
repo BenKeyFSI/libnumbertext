@@ -78,7 +78,7 @@ CNY:(.)	$(\1: yuan renminbi, fen, fen)
 EUR:(.)	$(\1: euro, centesimo, centesimi)
 GBP:(.)	$(\1: lira sterlina, penny, pence)
 JPY:(.)	$(\1: yen, sen, sen)
-USD:(.)	$(\1: dollaro USA, cent, cent)
+USD:(.)	$(\1: dollaro, cent, cent)
 
 "(JPY [-−]?\d+)[.,](\d\d)0" $1
 "(JPY [-−]?\d+[.,]\d\d)(\d)" $1 $2 rin
@@ -123,13 +123,20 @@ un[ao]		\1prima
 (.*)un[ao]	\1unesima
 due		seconda
 (.*)due		\1duesima
-(.*)tre		\1terza
-(.*)quattro	\1quarta
-(.*)cinque	\1quinta
-(.*)sei		\1sesta
+tre		terza
+(.*)tre		\1treesima
+quattro		\1quarta
+(.*)quattro	\1quattresima
+cinque		\1quinta
+(.*)cinque	\1cinquesima
+sei		\1sesta
+(.*)sei		\1seiesima
+sette		\1settima
 (.*)sette	\1settesima
+otto		\1ottava
 (.*)ootto	\1ottesima
 (.*)otto	\1ottesima
+nove		\1nona
 (.*)nove	\1novesima
 (.*)dieci	\1decima
 (.*tr)é		\1eesima

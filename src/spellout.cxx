@@ -2,6 +2,48 @@
 #include "numbertext-version.h"
 #include <cstring>
 
+#if (defined(_MSC_VER) && defined(_MSC_FULL_VER) && defined(_WIN32))
+
+#  pragma push_macro("DATADIR")
+#  undef DATADIR
+#  if defined(PSAPI_VERSION)
+#    undef PSAPI_VERSION
+#  endif
+#  define PSAPI_VERSION 2
+#  include <windows.h>
+#  include <array>
+#  include <filesystem>
+#  include <string>
+
+std::wstring GetLibNumberTextDataDirectory()
+{
+    constexpr DWORD PathLen{512};
+    std::array<wchar_t, PathLen> moduleFileName{};
+    const auto result{::GetModuleFileNameW(nullptr, moduleFileName.data(), PathLen)};
+    if (result == 0)
+    {
+        return {};
+    }
+    auto moduleFileNamePath{std::filesystem::path{moduleFileName.data()}};
+    auto moduleDirectory{moduleFileNamePath.parent_path()};
+    std::array<std::wstring, 3> candidates{L"data", L"../data", L"../../data"};
+    for (const auto& candidate : candidates)
+    {
+        auto candidatePath{moduleDirectory / candidate};
+        if (std::filesystem::exists(candidatePath))
+        {
+            const auto canonicalPath{std::filesystem::canonical(candidatePath)};
+            const auto canonicalPathString{canonicalPath.wstring()};
+            return canonicalPathString + std::filesystem::path::preferred_separator;
+        }
+    }
+    return {};
+}
+
+#  pragma pop_macro("DATADIR")
+
+#endif
+
 #ifdef HAVE_BOOST_REGEX
   using namespace boost;
 #else
@@ -38,6 +80,13 @@ int main(int argc, char* argv[])
     }
     std::vector <std::string> paths;
     paths.emplace_back("");
+#if (defined(_MSC_VER) && defined(_MSC_FULL_VER) && defined(_WIN32))
+    auto libNumberTextDataDirectory{GetLibNumberTextDataDirectory()};
+    if (!libNumberTextDataDirectory.empty())
+    {
+        paths.push_back(Numbertext::wstring2string(libNumberTextDataDirectory));
+    }
+#endif
     paths.emplace_back(DEFPATH);
     paths.emplace_back(DEFPATH2);
 
