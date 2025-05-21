@@ -3,6 +3,14 @@
 #include <cstring>
 
 #if (defined(_MSC_VER) && defined(_MSC_FULL_VER) && defined(_WIN32))
+#  define Enable_GetLibNumberTextDataDirectory 1
+#elif (defined(__MINGW64__))
+#  define Enable_GetLibNumberTextDataDirectory 1
+#else
+#  define Enable_GetLibNumberTextDataDirectory 0
+#endif
+
+#if (Enable_GetLibNumberTextDataDirectory)
 
 #  pragma push_macro("DATADIR")
 #  undef DATADIR
@@ -80,7 +88,7 @@ int main(int argc, char* argv[])
     }
     std::vector <std::string> paths;
     paths.emplace_back("");
-#if (defined(_MSC_VER) && defined(_MSC_FULL_VER) && defined(_WIN32))
+#if (Enable_GetLibNumberTextDataDirectory)
     auto libNumberTextDataDirectory{GetLibNumberTextDataDirectory()};
     if (!libNumberTextDataDirectory.empty())
     {
