@@ -1,10 +1,33 @@
 cmake_minimum_required(VERSION 3.10)
-project(NumberText)
 
 set(NUMBERTEXT_MAJOR_VERSION 1)
 set(NUMBERTEXT_MINOR_VERSION 0)
 set(NUMBERTEXT_MICRO_VERSION 12)
+set(NUMBERTEXT_COMPANYNAME "László Németh et al.")
+set(NUMBERTEXT_COPYRIGHT "Copyright (C) 2009 - 2025 László Németh et al.")
+set(NUMBERTEXT_DESCRIPTION "Numbertext is a library for converting numbers to words in many languages.")
+set(NUMBERTEXT_FILE_VERSION "${NUMBERTEXT_MAJOR_VERSION},${NUMBERTEXT_MINOR_VERSION},${NUMBERTEXT_MICRO_VERSION}")
+set(NUMBERTEXT_PRODUCTNAME "Numbertext")
 set(NUMBERTEXT_VERSION "${NUMBERTEXT_MAJOR_VERSION}.${NUMBERTEXT_MINOR_VERSION}.${NUMBERTEXT_MICRO_VERSION}")
+
+
+set(HOME "$ENV{HOME}")
+set(LOCALAPPDATA "$ENV{LOCALAPPDATA}")
+set(VCPKG_ROOT "$ENV{VCPKG_ROOT}")
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  if(VCPKG_ROOT)
+    set(CMAKE_INSTALL_PREFIX "${VCPKG_ROOT}/installed/${VCPKG_TARGET_TRIPLET}")
+  elseif(WIN32)
+    set(CMAKE_INSTALL_PREFIX "${LOCALAPPDATA}/Programs/libnumbertext/${NUMBERTEXT_VERSION}")
+  elseif(HOME)
+    set(CMAKE_INSTALL_PREFIX "${HOME}/libnumbertext/${NUMBERTEXT_VERSION}")
+  else()
+    set(CMAKE_INSTALL_PREFIX "/usr/local")
+  endif()
+endif(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+
+project(NumberText)
+
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
@@ -56,6 +79,15 @@ if (MSVC)
     # warning level 4
     add_compile_options(/W4 /utf-8)
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS=1 _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING=1)
+    add_compile_definitions(VER_COMPANYNAME_STR="${NUMBERTEXT_COMPANYNAME}")
+    add_compile_definitions(VER_COMPANYNAME_STR="${NUMBERTEXT_COMPANYNAME}")
+    add_compile_definitions(VER_FILEDESCRIPTION_STR="${NUMBERTEXT_DESCRIPTION}")
+    add_compile_definitions(VER_FILEVERSION=${NUMBERTEXT_FILE_VERSION})
+    add_compile_definitions(VER_FILEVERSION_STR="${NUMBERTEXT_VERSION}")
+    add_compile_definitions(VER_LEGALCOPYRIGHT_STR="${NUMBERTEXT_COPYRIGHT}")
+    add_compile_definitions(VER_PRODUCTNAME_STR="${NUMBERTEXT_PRODUCTNAME}")
+    add_compile_definitions(VER_PRODUCTVERSION=${NUMBERTEXT_FILE_VERSION})
+    add_compile_definitions(VER_PRODUCTVERSION_STR="${NUMBERTEXT_VERSION}")
 else()
     # additional warnings
     add_compile_options(-Wall -Wextra -Wpedantic)
@@ -76,7 +108,14 @@ if(USE_BOOST)
 endif()
 if (MSVC)
   target_compile_definitions(libnumbertext PRIVATE _NUMBER_TEXT_EXPORTS=1)
+  target_compile_definitions(libnumbertext PRIVATE VER_INTERNALNAME_STR="libnumbertext-${NUMBERTEXT_VERSION}.dll")
+  target_compile_definitions(libnumbertext PRIVATE VER_ORIGINALFILENAME_STR="libnumbertext-${NUMBERTEXT_VERSION}.dll")
+  target_sources(libnumbertext PRIVATE "${CMAKE_SOURCE_DIR}/src/version.rc")
 endif()
+set_target_properties(libnumbertext PROPERTIES
+  VERSION "${NUMBERTEXT_VERSION}"
+  SOVERSION "${NUMBERTEXT_MAJOR_VERSION}"
+  OUTPUT_NAME "libnumbertext-${NUMBERTEXT_VERSION}")
 
 # Create executable
 add_executable(spellout "${CMAKE_SOURCE_DIR}/src/spellout.cxx")
@@ -88,6 +127,26 @@ if(USE_BOOST)
 endif()
 if (MSVC)
   target_compile_definitions(spellout PRIVATE DATADIR="/mingw64/share" _NUMBER_TEXT_IMPORTS=1)
+  target_compile_definitions(spellout PRIVATE VER_INTERNALNAME_STR="spellout.exe")
+  target_compile_definitions(spellout PRIVATE VER_ORIGINALFILENAME_STR="spellout.exe")
+  target_sources(spellout PRIVATE "${CMAKE_SOURCE_DIR}/src/version.rc")
 else()
   target_compile_definitions(spellout PRIVATE DATADIR="/usr/local/share")
 endif()
+
+install(TARGETS libnumbertext
+  RUNTIME DESTINATION bin
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
+install(TARGETS spellout DESTINATION bin)
+install(FILES
+  "${CMAKE_BINARY_DIR}/src/numbertext-version.h"
+  "${CMAKE_SOURCE_DIR}/src/Numbertext.hxx"
+  "${CMAKE_SOURCE_DIR}/src/NumberTextAPI.hxx"
+  "${CMAKE_SOURCE_DIR}/src/Soros.hxx"
+  DESTINATION include) 
+install(
+  DIRECTORY "${CMAKE_SOURCE_DIR}/data"
+  DESTINATION .
+  FILES_MATCHING
+    PATTERN "*.sor")
