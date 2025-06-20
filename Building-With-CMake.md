@@ -40,3 +40,16 @@ cmake --install . --prefix f:\opt\libnumbertext\1.0.12
 ~~~~
 
 When attempting to build LibNumberText yourself first open the Command Prompt, make certain all the necessary environment variables are set correctly, and CD into the directory containing this file. Change the prefix to meet your needs.
+
+## Building on GNU/Linux
+
+The following commands demonstrate how to use the CMake build system to build LibNumberText on GNU/Linux.
+
+~~~~
+mkdir build
+cd build
+cmake  -G "Unix Makefiles" ..
+cmake --build . --verbose
+cmake --install . --prefix ~/opt/libnumbertext\1.0.12
+~~~~
+
