@@ -1,0 +1,29 @@
+﻿#pragma once
+
+#if !defined(__MINGW64__)
+#  include "verrsrc.h"
+#endif
+#include "winres.h"
+
+#ifndef DEBUG
+#  define VER_DEBUG 0x0L
+#else
+#  define VER_DEBUG VS_FF_DEBUG
+#endif
+
+#define VER_FILEVERSION @NUMBERTEXT_FILE_VERSION@
+#define VER_PRODUCTVERSION @NUMBERTEXT_FILE_VERSION@
+#define VER_COMPANYNAME_STR "László Németh et al."
+#define VER_FILEDESCRIPTION_STR "Numbertext is a library for converting numbers to words in many languages."
+#define VER_FILEVERSION_STR "@NUMBERTEXT_VERSION@"
+#define VER_LEGALCOPYRIGHT_STR "Copyright (C) 2009 - @CURRENT_YEAR@ László Németh et al."
+#define VER_PRODUCTNAME_STR "Numbertext"
+#define VER_PRODUCTVERSION_STR "@NUMBERTEXT_VERSION@"
+
+#if defined(LibNumberText_Resources)
+#  define VER_INTERNALNAME_STR "libnumbertext-@NUMBERTEXT_VERSION@.dll"
+#  define VER_ORIGINALFILENAME_STR "libnumbertext-@NUMBERTEXT_VERSION@.dll"
+#elif defined(SpellOut_Resources)
+#  define VER_INTERNALNAME_STR "spellout.exe"
+#  define VER_ORIGINALFILENAME_STR "spellout.exe"
+#endif

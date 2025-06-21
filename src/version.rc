@@ -1,13 +1,6 @@
 #pragma code_page(65001)
 
-#include "verrsrc.h"
-#include "winres.h"
-
-#ifndef DEBUG
-#  define VER_DEBUG 0x0L
-#else
-#  define VER_DEBUG VS_FF_DEBUG
-#endif
+#include "version-info-defs.h"
 
 VS_VERSION_INFO VERSIONINFO
   FILEVERSION VER_FILEVERSION
