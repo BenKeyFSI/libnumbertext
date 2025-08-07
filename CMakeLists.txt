@@ -30,7 +30,7 @@ set_install_prefix()
 project(NumberText)
 
 # Set C++ standard
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 include(CheckIncludeFileCXX)
